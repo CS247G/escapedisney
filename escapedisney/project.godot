@@ -6,6 +6,8 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
+#hi
+
 config_version=5
 
 [application]
