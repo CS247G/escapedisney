@@ -6,12 +6,18 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-#hi
-
 config_version=5
+
+#hiconfig_version=5
 
 [application]
 
 config/name="EscapeDisney"
+run/main_scene="uid://o17ijdgprb5r"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
