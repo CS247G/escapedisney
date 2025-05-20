@@ -1,11 +1,11 @@
 [gd_scene load_steps=5 format=3 uid="uid://13uawn5smgvl"]
 
-[ext_resource type="Texture2D" uid="uid://dqtnntt2l5lds" path="res://Screenshot 2025-05-18 at 7.19.14 PM.png" id="1_16k0q"]
 [ext_resource type="Script" uid="uid://c35s8eemulak3" path="res://adventure.gd" id="1_irev3"]
 [ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_1rxox"]
+[ext_resource type="Texture2D" uid="uid://ckrjryoilualc" path="res://Screenshot 2025-05-19 at 8.13.12 PM.png" id="2_irev3"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1rxox"]
-texture = ExtResource("1_16k0q")
+texture = ExtResource("2_irev3")
 
 [node name="Control" type="Control"]
 layout_mode = 3
