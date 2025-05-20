@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import NavButton from '../NavButton';
 
 const PanelOverlay = styled.div`
   position: absolute;
@@ -15,14 +16,15 @@ const PanelOverlay = styled.div`
 `;
 
 const PanelContainer = styled.div`
-  background-color: #fff;
-  border-radius: 10px;
+  background-color: ${props => props.theme.colors.white};
+  border-radius: 15px;
   padding: 30px;
   max-width: 600px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   text-align: center;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-family: ${props => props.theme.fonts.body};
   animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  border: 3px solid ${props => props.theme.colors.secondary};
   
   @keyframes pop-in {
     0% { transform: scale(0.5); opacity: 0; }
@@ -31,29 +33,32 @@ const PanelContainer = styled.div`
 `;
 
 const Title = styled.h2`
-  color: #e91e63;
+  color: ${props => props.theme.colors.primary};
   margin-bottom: 20px;
   font-size: 28px;
+  font-family: ${props => props.theme.fonts.heading};
 `;
 
 const RiddleContent = styled.div`
-  background-color: #f9f6e5;
-  border-left: 5px solid #ffca28;
+  background-color: ${props => props.theme.colors.background};
+  border-left: 5px solid ${props => props.theme.colors.accent};
   padding: 15px;
   margin-bottom: 20px;
   text-align: left;
   border-radius: 5px;
   font-style: italic;
   white-space: pre-line;
+  color: ${props => props.theme.colors.text};
 `;
 
 const Instructions = styled.p`
-  color: #5e35b1;
+  color: ${props => props.theme.colors.light};
   font-weight: bold;
   margin-top: 20px;
+  margin-bottom: 25px;
 `;
 
-const RiddlePanel = ({ riddle }) => {
+const RiddlePanel = ({ riddle, onComplete }) => {
   return (
     <PanelOverlay>
       <PanelContainer>
@@ -64,6 +69,11 @@ const RiddlePanel = ({ riddle }) => {
         <Instructions>
           Now look for puzzle pieces around the classroom according to the riddle!
         </Instructions>
+        <NavButton 
+          onClick={onComplete} 
+          text="Continue to Fantasyland" 
+          direction="right" 
+        />
       </PanelContainer>
     </PanelOverlay>
   );
