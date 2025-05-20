@@ -4,6 +4,7 @@ import Background from './Background';
 import Logo from './Logo';
 import Counter from './Counter';
 import RiddlePanel from './RiddlePanel';
+import NavButton from '../NavButton';
 
 const Container = styled.div`
   width: 100%;
@@ -14,9 +15,15 @@ const Container = styled.div`
 
 const Title = styled.h1`
   text-align: center;
-  color: #282c34;
+  color: ${props => props.theme.colors.primary};
   margin-bottom: 20px;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-family: ${props => props.theme.fonts.heading};
+`;
+
+const ButtonContainer = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
 `;
 
 // Explicit array with exactly 6 logos
@@ -36,7 +43,7 @@ Find all six to help yourselves.
 Once the picture is complete,
 The first number you shall meet.`;
 
-const LogoFinder = () => {
+const LogoFinder = ({ onBack }) => {
   // Initialize with exactly 6 logos
   const [logos, setLogos] = useState(LOGOS);
   const [logosFound, setLogosFound] = useState(0);
@@ -66,22 +73,10 @@ const LogoFinder = () => {
     }
   }, [logosFound, logos.length]);
 
-  // Toggle debug overlay with 'd' key (for developer use only)
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.key === 'd') {
-        setShowDebug(prev => !prev);
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
-
   return (
     <Container>
       <Title>Find the Hidden Mickeys!</Title>
-      <div style={{ position: 'relative', marginBottom: '20px', border: '1px solid #ddd' }}>
+      <div style={{ position: 'relative', marginBottom: '20px', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
         <Background>
           {/* Render all 6 logos */}
           {logos.map(logo => (
@@ -92,48 +87,14 @@ const LogoFinder = () => {
             />
           ))}
           
-          {/* Debug overlay - hidden by default */}
-          {showDebug && (
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1000 }}>
-              {logos.map(logo => (
-                <div 
-                  key={`debug-${logo.id}`}
-                  style={{
-                    position: 'absolute',
-                    left: `${logo.x}px`,
-                    top: `${logo.y}px`,
-                    width: `${logo.width}px`,
-                    height: `${logo.height}px`,
-                    border: '3px dashed red',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'red',
-                    fontWeight: 'bold',
-                    pointerEvents: 'none',
-                    zIndex: 999
-                  }}
-                >
-                  {logo.id}
-                </div>
-              ))}
-            </div>
-          )}
-          
           <Counter found={logosFound} total={logos.length} />
           {showRiddle && <RiddlePanel riddle={riddle} />}
         </Background>
       </div>
       
-      {/* Debug button - remove this in production */}
-      {false && (
-        <div style={{ marginTop: '10px', padding: '10px', background: '#f0f0f0', borderRadius: '5px' }}>
-          <button onClick={() => setShowDebug(!showDebug)}>
-            {showDebug ? 'Hide' : 'Show'} Debug Overlay
-          </button>
-        </div>
-      )}
+      <ButtonContainer>
+        <NavButton onClick={onBack} text="Back to Instructions" direction="left" />
+      </ButtonContainer>
     </Container>
   );
 };

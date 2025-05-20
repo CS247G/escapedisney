@@ -5,13 +5,14 @@ const CounterContainer = styled.div`
   position: absolute;
   top: 20px;
   left: 20px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: ${props => props.theme.colors.white};
   padding: 10px 15px;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-family: ${props => props.theme.fonts.heading};
+  border: 2px solid ${props => props.theme.colors.primary};
 `;
 
 const MickeyIcon = styled.div`
@@ -23,7 +24,7 @@ const MickeyIcon = styled.div`
   &::before, &::after {
     content: '';
     position: absolute;
-    background-color: #000;
+    background-color: ${props => props.theme.colors.accent};
     border-radius: 50%;
   }
   
@@ -41,7 +42,7 @@ const MickeyIcon = styled.div`
     height: 50%;
     top: -20%;
     left: -20%;
-    box-shadow: 90% -20% 0 0 #000;
+    box-shadow: 90% -20% 0 0 ${props => props.theme.colors.accent};
   }
 `;
 
@@ -49,7 +50,7 @@ const CounterText = styled.p`
   margin: 0;
   font-size: 18px;
   font-weight: bold;
-  color: #282c34;
+  color: ${props => props.theme.colors.text};
 `;
 
 const Counter = ({ found, total }) => {
