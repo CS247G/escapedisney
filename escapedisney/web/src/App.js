@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import MainPage from './components/MainPage';
 import GameIntro from './components/GameIntro';
 import LogoFinder from './components/toontown/LogoFinder';
-import NavButton from './components/NavButton';
+import PuzzleInstructions from './components/toontown/PuzzleInstructions';
+import FantasylandIntro from './components/fantasyland/fantasylandIntro';
+import AudioChallenge from './components/fantasyland/audioChallenge';
 import styled, { ThemeProvider } from 'styled-components';
 
 // Pastel Disney theme
@@ -35,22 +37,61 @@ const AppContainer = styled.div`
 `;
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('main');
+  // Start directly with the game intro instead of the main page
+  const [currentPage, setCurrentPage] = useState('intro');
+  
+  useEffect(() => {
+    console.log("Current page:", currentPage);
+  }, [currentPage]);
+  
+  const [gameState, setGameState] = useState({
+    toontown: { completed: false, number: '' },
+    fantasyland: { completed: false, number: '' }
+  });
   
   const navigateTo = (page) => {
+    console.log(`Navigating to: ${page}`);
     setCurrentPage(page);
+  };
+  
+  const completeChallenge = (land, number) => {
+    console.log(`Completing challenge for ${land} with number ${number}`);
+    setGameState(prevState => ({
+      ...prevState,
+      [land]: { completed: true, number: number || '' }
+    }));
+  };
+
+  // After finding all hidden Mickeys, navigate to puzzle instructions
+  const handleMickeysFound = () => {
+    console.log("All Mickeys found, navigating to puzzle instructions");
+    navigateTo('puzzle-instructions');
+  };
+
+  // After finding puzzle pieces in classroom, navigate to Fantasyland
+  const handlePuzzlePiecesFound = () => {
+    console.log("Puzzle pieces found, completing Toontown challenge");
+    completeChallenge('toontown', '7');
+    navigateTo('fantasyland-intro');
   };
 
   return (
     <ThemeProvider theme={theme}>
       <AppContainer>
-        {currentPage === 'main' && (
-          <MainPage onContinue={() => navigateTo('intro')} />
-        )}
+        {/* Debug info - you can remove this in production */}
+        <div style={{ 
+          padding: '10px', 
+          backgroundColor: '#eee', 
+          fontSize: '12px', 
+          fontFamily: 'monospace',
+          display: process.env.NODE_ENV === 'development' ? 'block' : 'none'
+        }}>
+          Current Page: {currentPage}
+        </div>
         
+        {/* Start with GameIntro - no back button needed */}
         {currentPage === 'intro' && (
           <GameIntro 
-            onBack={() => navigateTo('main')} 
             onContinue={() => navigateTo('toontown')} 
           />
         )}
@@ -58,7 +99,40 @@ function App() {
         {currentPage === 'toontown' && (
           <LogoFinder 
             onBack={() => navigateTo('intro')} 
+            onComplete={handleMickeysFound}
           />
+        )}
+        
+        {/* New page for puzzle piece instructions */}
+        {currentPage === 'puzzle-instructions' && (
+          <PuzzleInstructions 
+            onContinue={handlePuzzlePiecesFound}
+          />
+        )}
+        
+        {currentPage === 'fantasyland-intro' && (
+          <FantasylandIntro 
+            onBack={() => navigateTo('puzzle-instructions')} 
+            onContinue={() => navigateTo('fantasyland-audio')} 
+          />
+        )}
+        
+        {currentPage === 'fantasyland-audio' && (
+          <AudioChallenge 
+            onBack={() => navigateTo('fantasyland-intro')}
+            onComplete={() => {
+              completeChallenge('fantasyland', '3');
+              navigateTo('crossword');
+            }}
+          />
+        )}
+        
+        {currentPage === 'crossword' && (
+          <div>
+            <h1>Crossword Challenge</h1>
+            <p>This would be the crossword challenge component</p>
+            <button onClick={() => navigateTo('fantasyland-audio')}>Back</button>
+          </div>
         )}
       </AppContainer>
     </ThemeProvider>
@@ -66,4 +140,3 @@ function App() {
 }
 
 export default App;
-

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import NavButton from '../NavButton';
 
 const PanelOverlay = styled.div`
   position: absolute;
@@ -58,7 +57,50 @@ const Instructions = styled.p`
   margin-bottom: 25px;
 `;
 
+// Create a button styled like the one in your screenshot
+const ContinueButton = styled.button`
+  background-color: #6c5b7b; /* The lavender color from your theme */
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    background-color: #c06c84; /* The accent color from your theme */
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const Arrow = styled.span`
+  margin-left: 8px;
+`;
+
 const RiddlePanel = ({ riddle, onComplete }) => {
+  // This function will be called when the button is clicked
+  const handleClick = () => {
+    console.log("Find puzzle pieces button clicked");
+    
+    // Call onComplete to navigate to the next stage
+    if (typeof onComplete === 'function') {
+      onComplete();
+    } else {
+      console.error("onComplete is not a function or is undefined");
+    }
+  };
+
   return (
     <PanelOverlay>
       <PanelContainer>
@@ -69,11 +111,11 @@ const RiddlePanel = ({ riddle, onComplete }) => {
         <Instructions>
           Now look for puzzle pieces around the classroom according to the riddle!
         </Instructions>
-        <NavButton 
-          onClick={onComplete} 
-          text="Continue to Fantasyland" 
-          direction="right" 
-        />
+        
+        {/* Changed button text to match new instruction */}
+        <ContinueButton onClick={handleClick}>
+          Find Puzzle Pieces <Arrow>→</Arrow>
+        </ContinueButton>
       </PanelContainer>
     </PanelOverlay>
   );
