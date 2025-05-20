@@ -1,17 +1,19 @@
 [gd_scene load_steps=5 format=3 uid="uid://bsl2i68hjh1fd"]
 
 [ext_resource type="Script" uid="uid://bb45v4a6xbhhl" path="res://toontown.gd" id="1_ddn88"]
-[ext_resource type="Texture2D" uid="uid://dwxyt7jrdtf5d" path="res://Screenshot 2025-05-18 at 6.21.33 PM.png" id="1_j7sg7"]
+[ext_resource type="Texture2D" uid="uid://bflfjx2jf0ac8" path="res://Screenshot 2025-05-19 at 8.10.52 PM.png" id="2_ddn88"]
 [ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_nfntl"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nfntl"]
-texture = ExtResource("1_j7sg7")
+texture = ExtResource("2_ddn88")
 
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ddn88")

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://o17ijdgprb5r"]
 
 [ext_resource type="Script" uid="uid://cnak5y3420gpn" path="res://titlescreen.gd" id="1_qtu10"]
-[ext_resource type="Texture2D" uid="uid://bgxb5v0d16k63" path="res://Screenshot 2025-05-18 at 6.19.17 PM.png" id="2_ee4bf"]
+[ext_resource type="Texture2D" uid="uid://bla2cgnyw3g0v" path="res://disney-1.jpeg" id="2_ee4bf"]
 [ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_qtu10"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ee4bf"]

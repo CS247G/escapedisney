@@ -1,11 +1,11 @@
 [gd_scene load_steps=5 format=3 uid="uid://cr4fdamxe2h53"]
 
 [ext_resource type="Script" uid="uid://btj52uy30gv1u" path="res://indiana.gd" id="1_pbwvv"]
-[ext_resource type="Texture2D" uid="uid://crv2p8fk35xhp" path="res://escapedisney-main/Screenshot 2025-05-18 at 7.16.40 PM.png" id="1_q8f2i"]
 [ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_c0fky"]
+[ext_resource type="Texture2D" uid="uid://dhmbit7xh5amb" path="res://Screenshot 2025-05-19 at 8.14.14 PM.png" id="2_pbwvv"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c0fky"]
-texture = ExtResource("1_q8f2i")
+texture = ExtResource("2_pbwvv")
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -68,15 +68,15 @@ text = "ADVENTURE
 
 [node name="PasswordImput" type="LineEdit" parent="."]
 layout_mode = 0
-offset_left = 448.0
-offset_top = 582.0
-offset_right = 929.0
-offset_bottom = 672.0
+offset_left = 520.0
+offset_top = 583.0
+offset_right = 1001.0
+offset_bottom = 673.0
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 944.0
+offset_left = 1027.0
 offset_top = 603.0
-offset_right = 1127.0
+offset_right = 1210.0
 offset_bottom = 655.0
 text = "enter"
