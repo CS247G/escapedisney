@@ -10,3 +10,7 @@ func _on_button_pressed() -> void:
 
 	if entered_password == CORRECT_PASSWORD:
 		get_tree().change_scene_to_file(NEXT_SCENE_PATH)
+
+
+func _on_music_button_pressed() -> void:
+	$AudioStreamPlayer.play() # Replace with function body.

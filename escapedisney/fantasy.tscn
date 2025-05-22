@@ -1,10 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cshh2k7vafg5k"]
+[gd_scene load_steps=6 format=3 uid="uid://cshh2k7vafg5k"]
 
 [ext_resource type="Script" uid="uid://dy051m61bmf5h" path="res://fantasy.gd" id="1_sgb37"]
-[ext_resource type="Texture2D" uid="uid://bflfjx2jf0ac8" path="res://Screenshot 2025-05-19 at 8.10.52 PM.png" id="2_7auye"]
+[ext_resource type="Texture2D" uid="uid://ckqho8wetbbva" path="res://Screenshot 2025-05-19 at 8.12.07 PM.png" id="2_7auye"]
 [ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_sgb37"]
+[ext_resource type="AudioStream" uid="uid://dkridt8uc7bmd" path="res://EscapeDisneyFantasyland.mp3" id="4_3rcas"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_81eo6"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ku7tu"]
 texture = ExtResource("2_7auye")
 
 [node name="Control" type="Control"]
@@ -23,7 +24,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_81eo6")
+theme_override_styles/panel = SubResource("StyleBoxTexture_ku7tu")
 
 [node name="TextEdit" type="TextEdit" parent="Panel"]
 layout_mode = 1
@@ -82,4 +83,17 @@ offset_right = 1127.0
 offset_bottom = 655.0
 text = "enter"
 
+[node name="MusicButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 778.0
+offset_top = 357.0
+offset_right = 1037.0
+offset_bottom = 414.0
+text = "Click to play music"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_3rcas")
+playback_type = 1
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MusicButton" to="." method="_on_music_button_pressed"]
