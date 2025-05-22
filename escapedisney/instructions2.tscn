@@ -1,0 +1,98 @@
+[gd_scene load_steps=8 format=3 uid="uid://bap0y6lr5e1ee"]
+
+[ext_resource type="Texture2D" uid="uid://fxmljh1qpr6j" path="res://outlinemap.png" id="1_daccv"]
+[ext_resource type="Script" uid="uid://ppna1yh4hpxe" path="res://instructions_2.gd" id="1_iek7s"]
+[ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_n6dri"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n6dri"]
+texture = ExtResource("1_daccv")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iek7s"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f4s6k"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xr1n8"]
+bg_color = Color(0.227941, 0.150206, 0.0382708, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_iek7s")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_right = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_n6dri")
+
+[node name="TextEdit" type="TextEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.682
+anchor_right = 0.453
+anchor_bottom = 0.961
+offset_left = -6.0
+offset_top = -11.04
+offset_right = -33.84
+offset_bottom = 6.07996
+grow_horizontal = 0
+theme_override_colors/background_color = Color(0.0745098, 0.290196, 0.423529, 0.596078)
+theme_override_colors/font_outline_color = Color(0, 0.00669325, 0.133066, 1)
+theme_override_colors/font_color = Color(0.947152, 0.899517, 0.802422, 1)
+theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 18
+text = "
+Your mission? Solve a series of challenges scattered across
+ four themed lands—Toontown, Fantasyland,
+ Tomorrowland, and Adventureland. Each location holds 
+a digital puzzle and an analog mission. Together, they 
+reveal a number. Collect all four numbers to unlock the 
+gate and make your escape before time runs out.
+
+"
+
+[node name="Button" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 439.0
+offset_top = -49.0
+offset_right = -707.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_n6dri")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_iek7s")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f4s6k")
+theme_override_styles/normal = SubResource("StyleBoxFlat_xr1n8")
+text = "NEXT"
+
+[connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]

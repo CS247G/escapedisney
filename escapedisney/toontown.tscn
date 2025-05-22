@@ -1,0 +1,87 @@
+[gd_scene load_steps=5 format=3 uid="uid://bsl2i68hjh1fd"]
+
+[ext_resource type="Script" uid="uid://bb45v4a6xbhhl" path="res://toontown.gd" id="1_ddn88"]
+[ext_resource type="Texture2D" uid="uid://bflfjx2jf0ac8" path="res://Screenshot 2025-05-19 at 8.10.52 PM.png" id="2_ddn88"]
+[ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_nfntl"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nfntl"]
+texture = ExtResource("2_ddn88")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ddn88")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_nfntl")
+
+[node name="TextEdit2" type="TextEdit" parent="Panel"]
+layout_mode = 1
+offset_left = 81.0
+offset_top = 117.0
+offset_right = 596.0
+offset_bottom = 207.0
+theme_override_colors/background_color = Color(1, 1, 1, 0)
+theme_override_colors/font_outline_color = Color(0, 0.00669325, 0.133066, 1)
+theme_override_colors/font_color = Color(0.947152, 0.899517, 0.802422, 1)
+theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("2_nfntl")
+theme_override_font_sizes/font_size = 75
+text = "TOONTOWN"
+
+[node name="TextEdit" type="TextEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.682
+anchor_right = 0.453
+anchor_bottom = 0.961
+offset_left = 660.0
+offset_top = -420.04
+offset_right = 632.16
+offset_bottom = -402.92
+grow_horizontal = 0
+theme_override_colors/background_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.00669325, 0.133066, 1)
+theme_override_colors/font_color = Color(0.947152, 0.899517, 0.802422, 1)
+theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 18
+text = "
+							Hidden Mickeys lie in wait,
+						Click the link to seal your fate.
+					A webpage holds the path you seek —
+				Solve it well to learn your secret number,
+							and unlock what comes next...
+
+[Insert Website Link Here]"
+
+[node name="PasswordImput" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 448.0
+offset_top = 582.0
+offset_right = 929.0
+offset_bottom = 672.0
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 944.0
+offset_top = 603.0
+offset_right = 1127.0
+offset_bottom = 655.0
+text = "enter"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

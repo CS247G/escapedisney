@@ -1,0 +1,99 @@
+[gd_scene load_steps=6 format=3 uid="uid://cshh2k7vafg5k"]
+
+[ext_resource type="Script" uid="uid://dy051m61bmf5h" path="res://fantasy.gd" id="1_sgb37"]
+[ext_resource type="Texture2D" uid="uid://ckqho8wetbbva" path="res://Screenshot 2025-05-19 at 8.12.07 PM.png" id="2_7auye"]
+[ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_sgb37"]
+[ext_resource type="AudioStream" uid="uid://dkridt8uc7bmd" path="res://EscapeDisneyFantasyland.mp3" id="4_3rcas"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ku7tu"]
+texture = ExtResource("2_7auye")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sgb37")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ku7tu")
+
+[node name="TextEdit" type="TextEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.682
+anchor_right = 0.453
+anchor_bottom = 0.961
+offset_left = 660.0
+offset_top = -420.04
+offset_right = 632.16
+offset_bottom = -402.92
+grow_horizontal = 0
+theme_override_colors/background_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.00669325, 0.133066, 1)
+theme_override_colors/font_color = Color(0.947152, 0.899517, 0.802422, 1)
+theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 18
+text = "
+								The skies are speaking...
+				Let Dumbo guide your ears — listen close.
+			The clues aren’t just heard — they’re hidden.
+					Act them out, piece them together,
+							and when the noise clears,
+				the crossword will reveal what you need"
+
+[node name="TextEdit2" type="TextEdit" parent="Panel"]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 116.0
+offset_right = 523.0
+offset_bottom = 289.0
+theme_override_colors/background_color = Color(1, 1, 1, 0)
+theme_override_colors/font_outline_color = Color(0, 0.00669325, 0.133066, 1)
+theme_override_colors/font_color = Color(0.947152, 0.899517, 0.802422, 1)
+theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("2_sgb37")
+theme_override_font_sizes/font_size = 75
+text = "FANTASY 
+     LAND "
+
+[node name="PasswordImput" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 448.0
+offset_top = 582.0
+offset_right = 929.0
+offset_bottom = 672.0
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 944.0
+offset_top = 603.0
+offset_right = 1127.0
+offset_bottom = 655.0
+text = "enter"
+
+[node name="MusicButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 778.0
+offset_top = 357.0
+offset_right = 1037.0
+offset_bottom = 414.0
+text = "Click to play music"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_3rcas")
+playback_type = 1
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MusicButton" to="." method="_on_music_button_pressed"]

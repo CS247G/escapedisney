@@ -1,0 +1,96 @@
+[gd_scene load_steps=8 format=3 uid="uid://d3wixaa1u1fqm"]
+
+[ext_resource type="Script" uid="uid://c1k5eu15qhmxb" path="res://instructions_3.gd" id="1_jdem8"]
+[ext_resource type="Texture2D" uid="uid://fxmljh1qpr6j" path="res://outlinemap.png" id="1_r6nln"]
+[ext_resource type="FontFile" uid="uid://ci0goo2tv35wk" path="res://Showtoon.ttf" id="2_q4iv8"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n6dri"]
+texture = ExtResource("1_r6nln")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jdem8"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r71r7"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w4434"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jdem8")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_right = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_n6dri")
+
+[node name="TextEdit" type="TextEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.682
+anchor_right = 0.453
+anchor_bottom = 0.961
+offset_left = -6.0
+offset_top = -11.04
+offset_right = -33.84
+offset_bottom = 6.07996
+grow_horizontal = 0
+theme_override_colors/background_color = Color(0.0745098, 0.290196, 0.423529, 0.596078)
+theme_override_colors/font_outline_color = Color(0, 0.00669325, 0.133066, 1)
+theme_override_colors/font_color = Color(0.947152, 0.899517, 0.802422, 1)
+theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 18
+text = "
+But beware—the manager passes by every 7 minutes.
+If you're not done with your current challenge when they 
+come around, you're officially behind. So stay sharp, work
+fast, and most of all—stick together.
+You have 30 minutes. Your freedom depends on it. 
+Ready? Go!"
+
+[node name="Button" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 439.0
+offset_top = -49.0
+offset_right = -707.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_q4iv8")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_jdem8")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_r71r7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_w4434")
+text = "NEXT"
+
+[connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]
