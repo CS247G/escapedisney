@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import MainPage from './components/MainPage';
 import GameIntro from './components/GameIntro';
 import LogoFinder from './components/toontown/LogoFinder';
-import PuzzleInstructions from './components/toontown/PuzzleInstructions';
-import FantasylandIntro from './components/fantasyland/fantasylandIntro';
-import AudioChallenge from './components/fantasyland/audioChallenge';
+import ShootingGame from './components/ShootingGame';
+import LandSelection from './components/LandSelection';
+import NavButton from './components/NavButton';
 import styled, { ThemeProvider } from 'styled-components';
 
 // Pastel Disney theme
@@ -36,103 +36,172 @@ const AppContainer = styled.div`
   font-family: ${props => props.theme.fonts.body};
 `;
 
+// Placeholder component for lands not yet implemented
+const PlaceholderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+`;
+
+const PlaceholderCard = styled.div`
+  background-color: ${props => props.theme.colors.white};
+  border-radius: 15px;
+  padding: 3rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  margin: 2rem auto;
+`;
+
+const PlaceholderTitle = styled.h1`
+  font-family: ${props => props.theme.fonts.heading};
+  font-size: 2.5rem;
+  color: ${props => props.theme.colors.primary};
+  margin-bottom: 1rem;
+`;
+
+const PlaceholderText = styled.p`
+  font-size: 1.2rem;
+  color: ${props => props.theme.colors.text};
+  margin-bottom: 2rem;
+  line-height: 1.6;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+`;
+
+const PlaceholderLand = ({ landName, onBack, onComplete }) => {
+  const landInfo = {
+    fantasyland: {
+      icon: '🏰',
+      title: 'Fantasyland',
+      description: 'Listen to audio clues and play charades to build your word bank for the crossword puzzle. Help Dumbo and friends solve magical riddles!'
+    },
+    adventureland: {
+      icon: '🗺️',
+      title: 'Adventureland', 
+      description: 'Join Indiana Jones on a treasure hunt! Use the map to direct field agents across the room and discover the hidden location.'
+    }
+  };
+
+  const info = landInfo[landName];
+  
+  return (
+    <PlaceholderContainer>
+      <PlaceholderCard>
+        <PlaceholderTitle>
+          {info.icon} {info.title}
+        </PlaceholderTitle>
+        <PlaceholderText>
+          {info.description}
+        </PlaceholderText>
+        <PlaceholderText style={{ fontStyle: 'italic', color: '#666' }}>
+          This challenge is coming soon! For now, you can collect a demo number.
+        </PlaceholderText>
+        
+        <ButtonContainer>
+          <NavButton 
+            onClick={onBack}
+            text="Back to Lands"
+            direction="left"
+          />
+          <NavButton 
+            onClick={() => onComplete(Math.floor(Math.random() * 9) + 1)}
+            text={`Complete ${info.title} (Demo)`}
+            direction="right"
+          />
+        </ButtonContainer>
+      </PlaceholderCard>
+    </PlaceholderContainer>
+  );
+};
+
 function App() {
-  // Start directly with the game intro instead of the main page
-  const [currentPage, setCurrentPage] = useState('intro');
-  
-  useEffect(() => {
-    console.log("Current page:", currentPage);
-  }, [currentPage]);
-  
-  const [gameState, setGameState] = useState({
-    toontown: { completed: false, number: '' },
-    fantasyland: { completed: false, number: '' }
+  const [currentPage, setCurrentPage] = useState('main');
+  const [collectedNumbers, setCollectedNumbers] = useState({
+    toontown: null,
+    fantasyland: null,
+    tomorrowland: null,
+    adventureland: null
   });
-  
+
   const navigateTo = (page) => {
-    console.log(`Navigating to: ${page}`);
     setCurrentPage(page);
   };
-  
-  const completeChallenge = (land, number) => {
-    console.log(`Completing challenge for ${land} with number ${number}`);
-    setGameState(prevState => ({
-      ...prevState,
-      [land]: { completed: true, number: number || '' }
+
+  const handleNumberCollected = (land, number) => {
+    setCollectedNumbers(prev => ({
+      ...prev,
+      [land]: number
     }));
+    // After collecting a number, return to land selection
+    navigateTo('lands');
   };
 
-  // After finding all hidden Mickeys, navigate to puzzle instructions
-  const handleMickeysFound = () => {
-    console.log("All Mickeys found, navigating to puzzle instructions");
-    navigateTo('puzzle-instructions');
-  };
-
-  // After finding puzzle pieces in classroom, navigate to Fantasyland
-  const handlePuzzlePiecesFound = () => {
-    console.log("Puzzle pieces found, completing Toontown challenge");
-    completeChallenge('toontown', '7');
-    navigateTo('fantasyland-intro');
-  };
+  const allNumbersCollected = Object.values(collectedNumbers).every(num => num !== null);
+  const finalCode = Object.values(collectedNumbers).join('');
 
   return (
     <ThemeProvider theme={theme}>
       <AppContainer>
-        {/* Debug info - you can remove this in production */}
-        <div style={{ 
-          padding: '10px', 
-          backgroundColor: '#eee', 
-          fontSize: '12px', 
-          fontFamily: 'monospace',
-          display: process.env.NODE_ENV === 'development' ? 'block' : 'none'
-        }}>
-          Current Page: {currentPage}
-        </div>
+        {currentPage === 'main' && (
+          <MainPage onContinue={() => navigateTo('lands')} />
+        )}
         
-        {/* Start with GameIntro - no back button needed */}
+        {currentPage === 'lands' && (
+          <LandSelection 
+            onBack={() => navigateTo('main')}
+            onSelectLand={(land) => {
+              if (land === 'toontown') {
+                navigateTo('intro');
+              } else if (land === 'tomorrowland') {
+                navigateTo('tomorrowland');
+              } else {
+                // For other lands, navigate to placeholder
+                navigateTo(land);
+              }
+            }}
+            collectedNumbers={collectedNumbers}
+            allNumbersCollected={allNumbersCollected}
+            finalCode={finalCode}
+          />
+        )}
+        
         {currentPage === 'intro' && (
           <GameIntro 
-            onContinue={() => navigateTo('toontown')} 
+            onBack={() => navigateTo('lands')}
+            onContinue={() => navigateTo('toontown')}
           />
         )}
         
         {currentPage === 'toontown' && (
           <LogoFinder 
-            onBack={() => navigateTo('intro')} 
-            onComplete={handleMickeysFound}
+            onBack={() => navigateTo('intro')}
+            onComplete={(number) => handleNumberCollected('toontown', number)}
           />
         )}
         
-        {/* New page for puzzle piece instructions */}
-        {currentPage === 'puzzle-instructions' && (
-          <PuzzleInstructions 
-            onContinue={handlePuzzlePiecesFound}
+        {currentPage === 'tomorrowland' && (
+          <ShootingGame 
+            onBack={() => navigateTo('lands')}
+            onComplete={(number) => handleNumberCollected('tomorrowland', number)}
           />
         )}
         
-        {currentPage === 'fantasyland-intro' && (
-          <FantasylandIntro 
-            onBack={() => navigateTo('puzzle-instructions')} 
-            onContinue={() => navigateTo('fantasyland-audio')} 
+        {/* Placeholder pages for other lands */}
+        {(currentPage === 'fantasyland' || currentPage === 'adventureland') && (
+          <PlaceholderLand 
+            landName={currentPage}
+            onBack={() => navigateTo('lands')}
+            onComplete={(number) => handleNumberCollected(currentPage, number)}
           />
-        )}
-        
-        {currentPage === 'fantasyland-audio' && (
-          <AudioChallenge 
-            onBack={() => navigateTo('fantasyland-intro')}
-            onComplete={() => {
-              completeChallenge('fantasyland', '3');
-              navigateTo('crossword');
-            }}
-          />
-        )}
-        
-        {currentPage === 'crossword' && (
-          <div>
-            <h1>Crossword Challenge</h1>
-            <p>This would be the crossword challenge component</p>
-            <button onClick={() => navigateTo('fantasyland-audio')}>Back</button>
-          </div>
         )}
       </AppContainer>
     </ThemeProvider>
