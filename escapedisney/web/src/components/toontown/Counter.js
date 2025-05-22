@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const CounterContainer = styled.div`
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 20px
   background-color: ${props => props.theme.colors.white};
   padding: 10px 15px;
   border-radius: 20px;
@@ -50,7 +50,7 @@ const CounterText = styled.p`
   margin: 0;
   font-size: 18px;
   font-weight: bold;
-  color: ${props => props.theme.colors.text};
+  color: white;
 `;
 
 const Counter = ({ found, total }) => {

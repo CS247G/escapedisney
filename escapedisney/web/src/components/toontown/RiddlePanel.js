@@ -59,21 +59,35 @@ const Instructions = styled.p`
 `;
 
 const RiddlePanel = ({ riddle, onComplete }) => {
+  const riddleText = `Four pieces scattered, not by chance,
+Together they make Mickey's stance.
+One you're given—no need to chase,
+The rest are hiding in their place:
+
+One hides where toons might rest their feet,
+Not on a chair, but under your seat.
+
+Another waits where guests walk in,
+Near the place where tales begin.
+
+One peeks out where books may stay,
+Stacked up high or tucked away.
+
+Put all four numbers side by side,
+They'll help you turn the final tide.
+The Mickeys show the code you seek—
+To leave this land of toon mystique!`;
+
   return (
     <PanelOverlay>
       <PanelContainer>
         <Title>Congratulations! You found all the hidden Mickeys!</Title>
         <RiddleContent>
-          {riddle}
+          {riddleText}
         </RiddleContent>
         <Instructions>
           Now look for puzzle pieces around the classroom according to the riddle!
         </Instructions>
-        <NavButton 
-          onClick={onComplete} 
-          text="Continue to Fantasyland" 
-          direction="right" 
-        />
       </PanelContainer>
     </PanelOverlay>
   );
