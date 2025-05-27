@@ -177,7 +177,7 @@ const TestCodeButton = styled.button`
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 1rem;
+  margin: 0.5rem;
   transition: all 0.3s ease;
   font-family: ${props => props.theme.fonts.heading};
   
@@ -191,6 +191,35 @@ const TestCodeButton = styled.button`
     cursor: not-allowed;
     transform: none;
   }
+`;
+
+/* ADDED: Lock Button Styling */
+const LockButton = styled.button`
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0.5rem;
+  transition: all 0.3s ease;
+  font-family: ${props => props.theme.fonts.heading};
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  }
+`;
+
+/* ADDED: Button Group for multiple buttons */
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 `;
 
 const CodeResult = styled.div`
@@ -234,7 +263,8 @@ const BackButtonContainer = styled.div`
   left: 2rem;
 `;
 
-const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersCollected, finalCode }) => {
+// MODIFIED: Added onTestLock prop
+const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, allNumbersCollected, finalCode }) => {
   const [guessedNumbers, setGuessedNumbers] = useState({
     toontown: '',
     fantasyland: '',
@@ -423,12 +453,19 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
           </div>
         </NumberDisplay>
         
-        <TestCodeButton 
-          onClick={testCode} 
-          disabled={!isGuessComplete}
-        >
-          🔓 Test Escape Code
-        </TestCodeButton>
+        {/* MODIFIED: Added ButtonGroup with both buttons */}
+        <ButtonGroup>
+          <TestCodeButton 
+            onClick={testCode} 
+            disabled={!isGuessComplete}
+          >
+            🔓 Test Escape Code
+          </TestCodeButton>
+          
+          <LockButton onClick={onTestLock}>
+            🔒 Test Lock Combination
+          </LockButton>
+        </ButtonGroup>
         
         {hasAnyGuess && (
           <ResetButton onClick={resetGuesses}>

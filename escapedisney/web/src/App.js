@@ -5,6 +5,7 @@ import GameIntro from './components/GameIntro';
 import LogoFinder from './components/toontown/LogoFinder';
 import ShootingGame from './components/ShootingGame';
 import LandSelection from './components/LandSelection';
+import LockPage from './components/LockPage'; // ADDED: Import LockPage
 import NavButton from './components/NavButton';
 import styled, { ThemeProvider } from 'styled-components';
 
@@ -168,9 +169,18 @@ function App() {
                 navigateTo(land);
               }
             }}
+            onTestLock={() => navigateTo('lockPage')} // ADDED: Pass lock page navigation
             collectedNumbers={collectedNumbers}
             allNumbersCollected={allNumbersCollected}
             finalCode={finalCode}
+          />
+        )}
+        
+        {/* ADDED: Lock Page Route */}
+        {currentPage === 'lockPage' && (
+          <LockPage 
+            onBack={() => navigateTo('lands')}
+            onUnlock={() => navigateTo('lands')}
           />
         )}
         
