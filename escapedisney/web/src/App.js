@@ -5,6 +5,7 @@ import GameIntro from './components/GameIntro';
 import LogoFinder from './components/toontown/LogoFinder';
 import ShootingGame from './components/ShootingGame';
 import LandSelection from './components/LandSelection';
+import LockPage from './components/LockPage'; // ADDED: Import LockPage
 import NavButton from './components/NavButton';
 import styled, { ThemeProvider } from 'styled-components';
 
@@ -82,12 +83,14 @@ const PlaceholderLand = ({ landName, onBack, onComplete }) => {
     fantasyland: {
       icon: '🏰',
       title: 'Fantasyland',
-      description: 'Listen to audio clues and play charades to build your word bank for the crossword puzzle. Help Dumbo and friends solve magical riddles!'
+      description: 'Listen to audio clues and play charades to build your word bank for the crossword puzzle. Help Dumbo and friends solve magical riddles!',
+      demoNumber: 9 // CHANGED: Fixed number for lock combination consistency
     },
     adventureland: {
       icon: '🗺️',
       title: 'Adventureland', 
-      description: 'Join Indiana Jones on a treasure hunt! Use the map to direct field agents across the room and discover the hidden location.'
+      description: 'Join Indiana Jones on a treasure hunt! Use the map to direct field agents across the room and discover the hidden location.',
+      demoNumber: 3 // CHANGED: Fixed number for lock combination consistency
     }
   };
 
@@ -113,7 +116,7 @@ const PlaceholderLand = ({ landName, onBack, onComplete }) => {
             direction="left"
           />
           <NavButton 
-            onClick={() => onComplete(Math.floor(Math.random() * 9) + 1)}
+            onClick={() => onComplete(info.demoNumber)} // CHANGED: Use fixed demo number
             text={`Complete ${info.title} (Demo)`}
             direction="right"
           />
@@ -168,9 +171,18 @@ function App() {
                 navigateTo(land);
               }
             }}
+            onTestLock={() => navigateTo('lockPage')} // ADDED: Pass lock page navigation
             collectedNumbers={collectedNumbers}
             allNumbersCollected={allNumbersCollected}
             finalCode={finalCode}
+          />
+        )}
+        
+        {/* ADDED: Lock Page Route */}
+        {currentPage === 'lockPage' && (
+          <LockPage 
+            onBack={() => navigateTo('lands')}
+            onUnlock={() => navigateTo('lands')}
           />
         )}
         

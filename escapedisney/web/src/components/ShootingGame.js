@@ -270,12 +270,13 @@ const ShootingGame = ({ onBack, onComplete }) => {
     );
   }, []);
 
+ 
   const endGame = useCallback(() => {
     let number;
     let success = false;
     
     if (score >= 1500) {
-      number = 9;
+      number = 2; // CHANGED: From 9 to 2
       success = true;
     } else {
       number = Math.max(1, Math.min(8, Math.floor(score / 200) + 1));

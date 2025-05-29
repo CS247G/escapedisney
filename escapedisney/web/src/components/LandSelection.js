@@ -41,24 +41,34 @@ const LandsGrid = styled.div`
 `;
 
 const LandCard = styled.div`
-  background: ${props => props.theme.colors.white};
+  background: ${props => {
+    if (props.locked) return '#f5f5f5';
+    return props.theme.colors.white;
+  }};
   border-radius: 15px;
   padding: 2rem;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+  cursor: ${props => props.locked ? 'not-allowed' : 'pointer'};
   position: relative;
   overflow: hidden;
+  opacity: ${props => props.locked ? 0.6 : 1};
   
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+    transform: ${props => props.locked ? 'none' : 'translateY(-5px)'};
+    box-shadow: ${props => props.locked ? '0 8px 32px rgba(0, 0, 0, 0.1)' : '0 12px 48px rgba(0, 0, 0, 0.15)'};
   }
   
   ${props => props.completed && `
     border: 3px solid #28a745;
     background: linear-gradient(135deg, #d4edda 0%, #ffffff 100%);
+    opacity: 1;
+  `}
+  
+  ${props => props.locked && `
+    border: 2px solid #ccc;
+    background: #f8f9fa;
   `}
 `;
 
@@ -78,44 +88,75 @@ const CompletedBadge = styled.div`
   font-weight: bold;
 `;
 
+const LockedBadge = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #6c757d;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+`;
+
 const LandIcon = styled.div`
   font-size: 4rem;
   margin-bottom: 1rem;
+  filter: ${props => props.locked ? 'grayscale(100%)' : 'none'};
 `;
 
 const LandTitle = styled.h3`
   font-family: ${props => props.theme.fonts.heading};
   font-size: 1.8rem;
-  color: ${props => props.theme.colors.primary};
+  color: ${props => props.locked ? '#6c757d' : props.theme.colors.primary};
   margin-bottom: 1rem;
 `;
 
 const LandDescription = styled.p`
   font-size: 1rem;
-  color: ${props => props.theme.colors.text};
+  color: ${props => props.locked ? '#999' : props.theme.colors.text};
   margin-bottom: 1.5rem;
   line-height: 1.5;
 `;
 
 const PlayButton = styled.button`
-  background: ${props => props.completed ? '#28a745' : `linear-gradient(45deg, ${props.theme.colors.primary}, ${props.theme.colors.secondary})`};
+  background: ${props => {
+    if (props.locked) return '#ccc';
+    if (props.completed) return '#28a745';
+    return `linear-gradient(45deg, ${props.theme.colors.primary}, ${props.theme.colors.secondary})`;
+  }};
   color: white;
   border: none;
   padding: 12px 24px;
   border-radius: 25px;
   font-size: 1.1rem;
   font-weight: bold;
-  cursor: pointer;
+  cursor: ${props => props.locked ? 'not-allowed' : 'pointer'};
   transition: all 0.3s ease;
   
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(248, 177, 149, 0.4);
+    transform: ${props => props.locked ? 'none' : 'scale(1.05)'};
+    box-shadow: ${props => props.locked ? 'none' : '0 4px 16px rgba(248, 177, 149, 0.4)'};
   }
   
   &:active {
-    transform: scale(0.98);
+    transform: ${props => props.locked ? 'none' : 'scale(0.98)'};
   }
+`;
+
+const LockMessage = styled.div`
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: rgba(108, 117, 125, 0.1);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-style: italic;
 `;
 
 const NumbersSection = styled.div`
@@ -177,7 +218,7 @@ const TestCodeButton = styled.button`
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 1rem;
+  margin: 0.5rem;
   transition: all 0.3s ease;
   font-family: ${props => props.theme.fonts.heading};
   
@@ -191,6 +232,33 @@ const TestCodeButton = styled.button`
     cursor: not-allowed;
     transform: none;
   }
+`;
+
+const LockButton = styled.button`
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0.5rem;
+  transition: all 0.3s ease;
+  font-family: ${props => props.theme.fonts.heading};
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 `;
 
 const CodeResult = styled.div`
@@ -234,7 +302,7 @@ const BackButtonContainer = styled.div`
   left: 2rem;
 `;
 
-const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersCollected, finalCode }) => {
+const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, allNumbersCollected, finalCode }) => {
   const [guessedNumbers, setGuessedNumbers] = useState({
     toontown: '',
     fantasyland: '',
@@ -243,32 +311,65 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
   });
   const [codeResult, setCodeResult] = useState(null);
 
+  // Define the order of lands
+  const landOrder = ['toontown', 'fantasyland', 'tomorrowland', 'adventureland'];
+  
   const lands = [
     {
       id: 'toontown',
       icon: '🏠',
       title: 'Toontown',
-      description: 'Find hidden Mickey silhouettes and solve riddles to discover puzzle pieces around the classroom.'
-    },
-    {
-      id: 'tomorrowland',
-      icon: '🚀',
-      title: 'Tomorrowland',
-      description: 'Test your aim in the futuristic shooting gallery. Hit Disney targets to earn points and your number!'
+      description: 'Find hidden Mickey silhouettes and solve riddles to discover puzzle pieces around the classroom.',
+      order: 1
     },
     {
       id: 'fantasyland',
       icon: '🏰',
       title: 'Fantasyland',
-      description: 'Listen to audio clues and play charades to build your word bank for the crossword puzzle.'
+      description: 'Listen to audio clues and play charades to build your word bank for the crossword puzzle.',
+      order: 2
+    },
+    {
+      id: 'tomorrowland',
+      icon: '🚀',
+      title: 'Tomorrowland',
+      description: 'Test your aim in the futuristic shooting gallery. Hit Disney targets to earn points and your number!',
+      order: 3
     },
     {
       id: 'adventureland',
       icon: '🗺️',
       title: 'Adventureland',
-      description: 'Help Indiana Jones navigate the map and direct field agents to find the hidden treasure.'
+      description: 'Help Indiana Jones navigate the map and direct field agents to find the hidden treasure.',
+      order: 4
     }
   ];
+
+  // Function to check if a land is locked
+  const isLandLocked = (landId) => {
+    const landIndex = landOrder.indexOf(landId);
+    if (landIndex === 0) return false; // First land (Toontown) is never locked
+    
+    // Check if previous land is completed
+    const previousLandId = landOrder[landIndex - 1];
+    return collectedNumbers[previousLandId] === null;
+  };
+
+  // Function to get lock message
+  const getLockMessage = (landId) => {
+    const landIndex = landOrder.indexOf(landId);
+    if (landIndex === 0) return '';
+    
+    const previousLand = lands.find(land => land.id === landOrder[landIndex - 1]);
+    return `Complete ${previousLand.title} first to unlock this challenge`;
+  };
+
+  const handleLandClick = (landId) => {
+    if (isLandLocked(landId)) {
+      return; // Do nothing if locked
+    }
+    onSelectLand(landId);
+  };
 
   const handleNumberChange = (land, value) => {
     // Only allow single digits 0-9
@@ -344,27 +445,47 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
       
       <Title>🏰 Choose Your Adventure</Title>
       <Subtitle>
-        Complete challenges in each Disney land to collect the four numbers needed to escape the park!
+        Complete challenges in each Disney land in order to collect the four numbers needed to escape the park!
       </Subtitle>
       
       <LandsGrid>
-        {lands.map(land => (
-          <LandCard 
-            key={land.id} 
-            onClick={() => onSelectLand(land.id)}
-            completed={collectedNumbers[land.id] !== null}
-          >
-            {collectedNumbers[land.id] && (
-              <CompletedBadge>✓</CompletedBadge>
-            )}
-            <LandIcon>{land.icon}</LandIcon>
-            <LandTitle>{land.title}</LandTitle>
-            <LandDescription>{land.description}</LandDescription>
-            <PlayButton completed={collectedNumbers[land.id] !== null}>
-              {collectedNumbers[land.id] ? '✓ Completed' : 'Start Challenge'}
-            </PlayButton>
-          </LandCard>
-        ))}
+        {lands.map(land => {
+          const isLocked = isLandLocked(land.id);
+          const isCompleted = collectedNumbers[land.id] !== null;
+          
+          return (
+            <LandCard 
+              key={land.id} 
+              onClick={() => handleLandClick(land.id)}
+              completed={isCompleted}
+              locked={isLocked}
+            >
+              {isCompleted && <CompletedBadge>✓</CompletedBadge>}
+              {isLocked && <LockedBadge>🔒</LockedBadge>}
+              
+              <LandIcon locked={isLocked}>{land.icon}</LandIcon>
+              <LandTitle locked={isLocked}>{land.title}</LandTitle>
+              <LandDescription locked={isLocked}>{land.description}</LandDescription>
+              
+              <PlayButton 
+                completed={isCompleted} 
+                locked={isLocked}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleLandClick(land.id);
+                }}
+              >
+                {isLocked ? '🔒 Locked' : isCompleted ? '✓ Completed' : 'Start Challenge'}
+              </PlayButton>
+              
+              {isLocked && (
+                <LockMessage>
+                  {getLockMessage(land.id)}
+                </LockMessage>
+              )}
+            </LandCard>
+          );
+        })}
       </LandsGrid>
 
       <NumbersSection>
@@ -423,12 +544,18 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
           </div>
         </NumberDisplay>
         
-        <TestCodeButton 
-          onClick={testCode} 
-          disabled={!isGuessComplete}
-        >
-          🔓 Test Escape Code
-        </TestCodeButton>
+        <ButtonGroup>
+          <TestCodeButton 
+            onClick={testCode} 
+            disabled={!isGuessComplete}
+          >
+            🔓 Test Escape Code
+          </TestCodeButton>
+          
+          <LockButton onClick={onTestLock}>
+            🔒 Test Lock Combination
+          </LockButton>
+        </ButtonGroup>
         
         {hasAnyGuess && (
           <ResetButton onClick={resetGuesses}>
@@ -472,7 +599,7 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
         
         {!allNumbersCollected && (
           <p style={{ color: '#666', fontStyle: 'italic', marginTop: '1rem' }}>
-            Complete all challenges to discover the escape code!
+            Complete all challenges in order to discover the escape code!
           </p>
         )}
       </NumbersSection>

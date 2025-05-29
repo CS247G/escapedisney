@@ -58,6 +58,12 @@ const Instructions = styled.p`
   margin-bottom: 25px;
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
 const RiddlePanel = ({ riddle, onComplete }) => {
   const riddleText = `Four pieces scattered, not by chance,
 Together they make Mickey's stance.
@@ -88,6 +94,14 @@ To leave this land of toon mystique!`;
         <Instructions>
           Now look for puzzle pieces around the classroom according to the riddle!
         </Instructions>
+        
+        <ButtonContainer>
+          <NavButton 
+            onClick={onComplete}
+            text="Continue Adventure"
+            direction="right"
+          />
+        </ButtonContainer>
       </PanelContainer>
     </PanelOverlay>
   );
