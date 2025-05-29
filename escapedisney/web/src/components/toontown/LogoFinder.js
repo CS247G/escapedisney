@@ -43,14 +43,12 @@ Find all six to help yourselves.
 Once the picture is complete,
 The first number you shall meet.`;
 
-const LogoFinder = ({ onBack }) => {
+// UPDATED: Added onComplete prop
+const LogoFinder = ({ onBack, onComplete }) => {
   // Initialize with exactly 6 logos
   const [logos, setLogos] = useState(LOGOS);
   const [logosFound, setLogosFound] = useState(0);
   const [showRiddle, setShowRiddle] = useState(false);
-  
-  // Debug state - set to false to hide debug outlines
-  const [showDebug, setShowDebug] = useState(false);
 
   // Handle logo click
   const handleLogoClick = (id) => {
@@ -61,6 +59,13 @@ const LogoFinder = ({ onBack }) => {
     
     setLogos(newLogos);
     setLogosFound(prev => prev + 1);
+  };
+
+  // ADDED: Handle riddle completion
+  const handleRiddleComplete = () => {
+    // Give them the number 1 for Toontown (as per lock combination 1-9-2-3)
+    const toontownNumber = 1;
+    onComplete(toontownNumber);
   };
 
   // Check if all logos are found
@@ -88,7 +93,13 @@ const LogoFinder = ({ onBack }) => {
           ))}
           
           <Counter found={logosFound} total={logos.length} />
-          {showRiddle && <RiddlePanel riddle={riddle} />}
+          {/* UPDATED: Pass onComplete handler to RiddlePanel */}
+          {showRiddle && (
+            <RiddlePanel 
+              riddle={riddle} 
+              onComplete={handleRiddleComplete}
+            />
+          )}
         </Background>
       </div>
       
