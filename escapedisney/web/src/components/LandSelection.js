@@ -234,25 +234,6 @@ const TestCodeButton = styled.button`
   }
 `;
 
-const LockButton = styled.button`
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  margin: 0.5rem;
-  transition: all 0.3s ease;
-  font-family: ${props => props.theme.fonts.heading};
-  
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
-  }
-`;
-
 const ButtonGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -296,13 +277,131 @@ const ResetButton = styled.button`
   }
 `;
 
+const CelebrationOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.5s ease-out;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+`;
+
+const CelebrationCard = styled.div`
+  background: linear-gradient(135deg, #ff6b9d, #ffa726, #ab47bc, #667eea);
+  border-radius: 25px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: bounceIn 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+
+  @keyframes bounceIn {
+    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+    50% { transform: scale(1.1) rotate(5deg); }
+    70% { transform: scale(0.9) rotate(-2deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%); }
+    100% { transform: translateX(100%) translateY(100%); }
+  }
+`;
+
+const CelebrationTitle = styled.h1`
+  font-size: 3rem;
+  color: white;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-family: ${props => props.theme.fonts.heading};
+  animation: pulse 1.5s infinite;
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+`;
+
+const EmojiRain = styled.div`
+  font-size: 4rem;
+  margin: 1.5rem 0;
+  animation: bounce 1s infinite alternate;
+
+  @keyframes bounce {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-20px); }
+  }
+`;
+
+const CelebrationMessage = styled.p`
+  font-size: 1.3rem;
+  color: white;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+`;
+
+const CelebrationButton = styled.button`
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: glow 2s infinite alternate;
+
+  @keyframes glow {
+    0% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+    100% { box-shadow: 0 8px 30px rgba(255, 255, 255, 0.4); }
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+    background: white;
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+`;
+
 const BackButtonContainer = styled.div`
   position: absolute;
   top: 2rem;
   left: 2rem;
 `;
 
-const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, allNumbersCollected, finalCode }) => {
+const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersCollected }) => {
   const [guessedNumbers, setGuessedNumbers] = useState({
     toontown: '',
     fantasyland: '',
@@ -310,6 +409,7 @@ const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, all
     adventureland: ''
   });
   const [codeResult, setCodeResult] = useState(null);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   // Define the order of lands
   const landOrder = ['toontown', 'fantasyland', 'tomorrowland', 'adventureland'];
@@ -384,39 +484,22 @@ const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, all
 
   const testCode = () => {
     const guessedCode = Object.values(guessedNumbers).join('');
-    const actualCode = Object.values(collectedNumbers).map(num => num || '0').join('');
     
     if (guessedCode.length !== 4) {
       setCodeResult({ error: true, message: 'Please enter all 4 numbers!' });
       return;
     }
     
-    if (guessedCode === actualCode && allNumbersCollected) {
+    if (guessedCode === '1923') {
       setCodeResult({ 
         success: true, 
-        message: '🎉 CORRECT CODE! You have successfully escaped Disney! 🎉' 
-      });
-    } else if (guessedCode === finalCode && allNumbersCollected) {
-      setCodeResult({ 
-        success: true, 
-        message: '🎉 PERFECT! You have cracked the escape code! 🎉' 
+        message: '🎉 CONGRATULATIONS! You have successfully escaped Disney! 🎉' 
       });
     } else {
-      const correctCount = guessedCode.split('').filter((digit, index) => 
-        digit === (collectedNumbers[Object.keys(collectedNumbers)[index]] || '0').toString()
-      ).length;
-      
-      if (correctCount > 0) {
-        setCodeResult({ 
-          error: true, 
-          message: `❌ Incorrect code! You have ${correctCount} number${correctCount !== 1 ? 's' : ''} in the right position.` 
-        });
-      } else {
-        setCodeResult({ 
-          error: true, 
-          message: '❌ Incorrect code! Keep playing to discover the right numbers.' 
-        });
-      }
+      setCodeResult({ 
+        error: true, 
+        message: '❌ Incorrect code! Keep playing to discover the right numbers.' 
+      });
     }
   };
 
@@ -428,6 +511,11 @@ const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, all
       adventureland: ''
     });
     setCodeResult(null);
+    setShowCelebration(false);
+  };
+
+  const closeCelebration = () => {
+    setShowCelebration(false);
   };
 
   const isGuessComplete = Object.values(guessedNumbers).every(num => num !== '');
@@ -551,11 +639,14 @@ const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, all
           >
             🔓 Test Escape Code
           </TestCodeButton>
-          
-          <LockButton onClick={onTestLock}>
-            🔒 Test Lock Combination
-          </LockButton>
         </ButtonGroup>
+        
+        {/* Debug indicator */}
+        {showCelebration && (
+          <div style={{ color: 'red', fontWeight: 'bold', margin: '10px 0' }}>
+            DEBUG: Celebration should be showing!
+          </div>
+        )}
         
         {hasAnyGuess && (
           <ResetButton onClick={resetGuesses}>
@@ -563,7 +654,7 @@ const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, all
           </ResetButton>
         )}
         
-        {codeResult && (
+        {codeResult && !showCelebration && (
           <CodeResult success={codeResult.success} error={codeResult.error}>
             {codeResult.message}
           </CodeResult>
@@ -603,6 +694,33 @@ const LandSelection = ({ onBack, onSelectLand, onTestLock, collectedNumbers, all
           </p>
         )}
       </NumbersSection>
+
+      {/* Celebration Pop-up - Debug version */}
+      {showCelebration ? (
+        <CelebrationOverlay onClick={closeCelebration}>
+          <CelebrationCard onClick={(e) => e.stopPropagation()}>
+            <CelebrationTitle>🎉 CONGRATULATIONS! 🎉</CelebrationTitle>
+            
+            <EmojiRain>
+              🎊 ✨ 🏰 ✨ 🎊
+            </EmojiRain>
+            
+            <CelebrationMessage>
+              You have successfully escaped from Disney!
+              <br />
+              🌟 You cracked the code and completed your magical adventure! 🌟
+            </CelebrationMessage>
+            
+            <EmojiRain>
+              🎈 🎁 🎪 🎁 🎈
+            </EmojiRain>
+            
+            <CelebrationButton onClick={closeCelebration}>
+              ✨ Amazing! Continue Playing ✨
+            </CelebrationButton>
+          </CelebrationCard>
+        </CelebrationOverlay>
+      ) : null}
     </LandSelectionContainer>
   );
 };

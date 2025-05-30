@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const sparkle = keyframes`
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.7; 
+    transform: scale(1.1); 
+  }
 `;
 
 const successPulse = keyframes`
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.05); 
+  }
+  100% { 
+    transform: scale(1); 
+  }
 `;
 
 const PageContainer = styled.div`
@@ -134,6 +146,32 @@ const TestButton = styled.button`
   }
 `;
 
+const ClearButton = styled.button`
+  background: linear-gradient(135deg, #ff6b9d, #f67280);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 1rem;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(255, 107, 157, 0.3);
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
 const ProgressSection = styled.div`
   border-top: 2px solid #f0f0f0;
   padding-top: 2rem;
@@ -166,7 +204,7 @@ const ProgressBox = styled.div`
   background: ${props => props.collected ? '#e8f5e8' : '#f9f9f9'};
   color: ${props => props.collected ? '#4CAF50' : '#999'};
   transition: all 0.3s ease;
-  animation: ${props => props.collected ? successPulse : 'none'} 1s ease-in-out;
+  animation: ${props => props.collected ? `${successPulse} 1s ease-in-out` : 'none'};
 `;
 
 const ProgressLabels = styled.div`
@@ -203,6 +241,16 @@ const StatusMessage = styled.div`
   `}
 `;
 
+const HintSection = styled.div`
+  background: rgba(255, 235, 59, 0.1);
+  border: 2px solid #ffc107;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: #856404;
+`;
+
 const EscapeCodePage = ({ onBack, collectedNumbers, allNumbersCollected, finalCode }) => {
   const [inputValues, setInputValues] = useState(['', '', '', '']);
   const [statusMessage, setStatusMessage] = useState('');
@@ -214,6 +262,29 @@ const EscapeCodePage = ({ onBack, collectedNumbers, allNumbersCollected, finalCo
       newValues[index] = value;
       setInputValues(newValues);
       setStatusMessage('');
+      
+      // Auto-focus next input
+      if (value && index < 3) {
+        const nextInput = document.querySelector(`input:nth-of-type(${index + 2})`);
+        if (nextInput) {
+          nextInput.focus();
+        }
+      }
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    // Handle backspace to go to previous input
+    if (e.key === 'Backspace' && !inputValues[index] && index > 0) {
+      const prevInput = document.querySelector(`input:nth-of-type(${index})`);
+      if (prevInput) {
+        prevInput.focus();
+      }
+    }
+    
+    // Handle Enter to test code
+    if (e.key === 'Enter' && inputValues.every(v => v !== '')) {
+      testCode();
     }
   };
 
@@ -236,24 +307,54 @@ const EscapeCodePage = ({ onBack, collectedNumbers, allNumbersCollected, finalCo
       setStatusMessage('🎉 Congratulations! You have successfully escaped Disney! 🎉');
       setMessageType('success');
     } else {
-      setStatusMessage('❌ Incorrect code. Keep trying!');
+      // Provide helpful feedback
+      const correctDigits = enteredCode.split('').filter((digit, index) => 
+        digit === finalCode[index]
+      ).length;
+      
+      if (correctDigits > 0) {
+        setStatusMessage(`❌ Incorrect code. You have ${correctDigits} digit${correctDigits !== 1 ? 's' : ''} in the correct position. Keep trying!`);
+      } else {
+        setStatusMessage('❌ Incorrect code. None of the digits are in the correct position. Keep trying!');
+      }
       setMessageType('error');
+    }
+  };
+
+  const clearInputs = () => {
+    setInputValues(['', '', '', '']);
+    setStatusMessage('');
+    setMessageType('');
+    // Focus first input
+    const firstInput = document.querySelector('input:first-of-type');
+    if (firstInput) {
+      firstInput.focus();
     }
   };
 
   const lands = ['Toontown', 'Fantasyland', 'Tomorrowland', 'Adventureland'];
   const landKeys = ['toontown', 'fantasyland', 'tomorrowland', 'adventureland'];
 
+  // Count how many numbers are collected
+  const collectedCount = Object.values(collectedNumbers).filter(num => num !== null).length;
+
   return (
     <PageContainer>
       <BackButton onClick={onBack}>← Back to Lands</BackButton>
       
       <ContentCard>
-        <Title>Interactive Escape Code</Title>
+        <Title>🔓 Interactive Escape Code</Title>
         
         <Description>
-          Enter your discovered numbers and test the code to escape!
+          Enter your discovered numbers and test the code to escape Disney!
         </Description>
+
+        {collectedCount > 0 && collectedCount < 4 && (
+          <HintSection>
+            💡 <strong>Tip:</strong> You've collected {collectedCount} out of 4 numbers. 
+            Complete the remaining challenges to discover all the digits!
+          </HintSection>
+        )}
 
         <CodeInputSection>
           <LandLabels>
@@ -269,6 +370,7 @@ const EscapeCodePage = ({ onBack, collectedNumbers, allNumbersCollected, finalCo
                 type="text"
                 value={value}
                 onChange={(e) => handleInputChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
                 maxLength={1}
                 hasValue={value !== ''}
                 placeholder="?"
@@ -276,12 +378,20 @@ const EscapeCodePage = ({ onBack, collectedNumbers, allNumbersCollected, finalCo
             ))}
           </CodeInputGrid>
 
-          <TestButton 
-            onClick={testCode}
-            disabled={inputValues.some(v => v === '')}
-          >
-            🔓 Test Escape Code
-          </TestButton>
+          <ButtonContainer>
+            <TestButton 
+              onClick={testCode}
+              disabled={inputValues.some(v => v === '')}
+            >
+              🔓 Test Escape Code
+            </TestButton>
+            
+            {inputValues.some(v => v !== '') && (
+              <ClearButton onClick={clearInputs}>
+                🗑️ Clear
+              </ClearButton>
+            )}
+          </ButtonContainer>
 
           {statusMessage && (
             <StatusMessage type={messageType}>
@@ -308,7 +418,10 @@ const EscapeCodePage = ({ onBack, collectedNumbers, allNumbersCollected, finalCo
           </ProgressLabels>
 
           <Description style={{ fontSize: '0.9rem', fontStyle: 'italic', marginTop: '1rem' }}>
-            Complete all challenges to discover the escape code!
+            {allNumbersCollected 
+              ? 'All numbers collected! You can now test the escape code.' 
+              : `Complete all challenges to discover the escape code! (${collectedCount}/4 completed)`
+            }
           </Description>
         </ProgressSection>
       </ContentCard>

@@ -2,22 +2,44 @@ import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const celebrate = keyframes`
-  0% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.1) rotate(5deg); }
-  50% { transform: scale(1.2) rotate(-5deg); }
-  75% { transform: scale(1.1) rotate(5deg); }
-  100% { transform: scale(1) rotate(0deg); }
+  0% { 
+    transform: scale(1) rotate(0deg); 
+  }
+  25% { 
+    transform: scale(1.1) rotate(5deg); 
+  }
+  50% { 
+    transform: scale(1.2) rotate(-5deg); 
+  }
+  75% { 
+    transform: scale(1.1) rotate(5deg); 
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+  }
 `;
 
 const sparkle = keyframes`
-  0%, 100% { opacity: 1; transform: translateY(0px); }
-  50% { opacity: 0.5; transform: translateY(-10px); }
+  0%, 100% { 
+    opacity: 1; 
+    transform: translateY(0px); 
+  }
+  50% { 
+    opacity: 0.5; 
+    transform: translateY(-10px); 
+  }
 `;
 
 const shake = keyframes`
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%, 100% { 
+    transform: translateX(0); 
+  }
+  25% { 
+    transform: translateX(-5px); 
+  }
+  75% { 
+    transform: translateX(5px); 
+  }
 `;
 
 const PageContainer = styled.div`
