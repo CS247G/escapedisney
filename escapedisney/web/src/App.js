@@ -8,6 +8,7 @@ import LandSelection from './components/LandSelection';
 import LockPage from './components/LockPage'; // ADDED: Import LockPage
 import NavButton from './components/NavButton';
 import styled, { ThemeProvider } from 'styled-components';
+import Fantasyland from './components/fantasyland/Fantasyland';
 
 // Pastel Disney theme
 const theme = {
@@ -208,16 +209,25 @@ function App() {
         )}
         
         {/* Placeholder pages for other lands */}
-        {(currentPage === 'fantasyland' || currentPage === 'adventureland') && (
-          <PlaceholderLand 
-            landName={currentPage}
+
+        {currentPage === 'fantasyland' && (
+          <Fantasyland
             onBack={() => navigateTo('lands')}
-            onComplete={(number) => handleNumberCollected(currentPage, number)}
+            onComplete={(number) => handleNumberCollected('fantasyland', number)}
           />
         )}
-      </AppContainer>
-    </ThemeProvider>
-  );
+
+        {currentPage === 'adventureland' && (
+          <PlaceholderLand 
+            landName="adventureland"
+            onBack={() => navigateTo('lands')}
+            onComplete={(number) => handleNumberCollected('adventureland', number)}
+          />
+        )}
+
+              </AppContainer>
+            </ThemeProvider>
+          );
 }
 
 export default App;
