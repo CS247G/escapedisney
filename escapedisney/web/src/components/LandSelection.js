@@ -401,6 +401,125 @@ const BackButtonContainer = styled.div`
   left: 2rem;
 `;
 
+// NEW: QR Code Modal Styles
+const QRModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+`;
+
+const QRModalCard = styled.div`
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.5s ease-out;
+  position: relative;
+
+  @keyframes slideUp {
+    0% { transform: translateY(50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+`;
+
+const QRTitle = styled.h2`
+  font-family: ${props => props.theme.fonts.heading};
+  color: #d2691e;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+`;
+
+const QRDescription = styled.p`
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+`;
+
+const QRCodeContainer = styled.div`
+  background: #f8f9fa;
+  border: 3px solid #e9ecef;
+  border-radius: 15px;
+  padding: 2rem;
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const QRCodeImage = styled.div`
+  width: 200px;
+  height: 200px;
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const QRCodeText = styled.p`
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 1rem;
+  font-style: italic;
+`;
+
+const QRCloseButton = styled.button`
+  background: linear-gradient(45deg, #d2691e, #ff8c00);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(210, 105, 30, 0.4);
+  }
+`;
+
+const DemoButton = styled.button`
+  background: linear-gradient(45deg, #d2691e, #ff8c00);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.5rem;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(210, 105, 30, 0.4);
+  }
+`;
+
 const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersCollected }) => {
   const [guessedNumbers, setGuessedNumbers] = useState({
     toontown: '',
@@ -410,6 +529,7 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
   });
   const [codeResult, setCodeResult] = useState(null);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false); // NEW: QR Modal state
 
   // Define the order of lands
   const landOrder = ['toontown', 'fantasyland', 'tomorrowland', 'adventureland'];
@@ -471,6 +591,11 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
     onSelectLand(landId);
   };
 
+  // NEW: Handle Adventureland Demo
+  const handleAdventurelandDemo = () => {
+    setShowQRModal(true);
+  };
+
   const handleNumberChange = (land, value) => {
     // Only allow single digits 0-9
     if (value === '' || (value.length === 1 && /^[0-9]$/.test(value))) {
@@ -518,6 +643,11 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
     setShowCelebration(false);
   };
 
+  // NEW: Close QR Modal
+  const closeQRModal = () => {
+    setShowQRModal(false);
+  };
+
   const isGuessComplete = Object.values(guessedNumbers).every(num => num !== '');
   const hasAnyGuess = Object.values(guessedNumbers).some(num => num !== '');
 
@@ -544,7 +674,12 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
           return (
             <LandCard 
               key={land.id} 
-              onClick={() => handleLandClick(land.id)}
+              onClick={() => {
+                // Only handle click for non-Adventureland lands
+                if (land.id !== 'adventureland') {
+                  handleLandClick(land.id);
+                }
+              }}
               completed={isCompleted}
               locked={isLocked}
             >
@@ -555,16 +690,28 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
               <LandTitle locked={isLocked}>{land.title}</LandTitle>
               <LandDescription locked={isLocked}>{land.description}</LandDescription>
               
-              <PlayButton 
-                completed={isCompleted} 
-                locked={isLocked}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleLandClick(land.id);
-                }}
-              >
-                {isLocked ? '🔒 Locked' : isCompleted ? '✓ Completed' : 'Start Challenge'}
-              </PlayButton>
+              {/* MODIFIED: Special handling for Adventureland */}
+              {land.id === 'adventureland' && !isLocked ? (
+                <DemoButton 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAdventurelandDemo();
+                  }}
+                >
+                  Start Challenge
+                </DemoButton>
+              ) : (
+                <PlayButton 
+                  completed={isCompleted} 
+                  locked={isLocked}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleLandClick(land.id);
+                  }}
+                >
+                  {isLocked ? '🔒 Locked' : isCompleted ? '✓ Completed' : 'Start Challenge'}
+                </PlayButton>
+              )}
               
               {isLocked && (
                 <LockMessage>
@@ -694,6 +841,47 @@ const LandSelection = ({ onBack, onSelectLand, collectedNumbers, allNumbersColle
           </p>
         )}
       </NumbersSection>
+
+      {/* NEW: QR Code Modal */}
+      {showQRModal && (
+        <QRModalOverlay onClick={closeQRModal}>
+          <QRModalCard onClick={(e) => e.stopPropagation()}>
+            <QRTitle>🗺️ Adventureland Challenge</QRTitle>
+            <QRDescription>
+              Join Indiana Jones on a treasure hunt! Use the map to direct field agents across the room and discover the hidden location.
+            </QRDescription>
+            
+            <QRCodeContainer>
+              <QRCodeImage>
+                <img 
+                  src={require('../assets/adventureland-qr.png')} 
+                  alt="Adventureland QR Code" 
+                  style={{width: '100%', height: '100%', objectFit: 'contain'}} 
+                />
+              </QRCodeImage>
+              <QRCodeText>
+                Scan this QR code with your phone to access the interactive map game!
+              </QRCodeText>
+            </QRCodeContainer>
+            
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+              <QRCloseButton onClick={closeQRModal}>
+                Close
+              </QRCloseButton>
+              <QRCloseButton 
+                onClick={() => {
+                  // You can add logic here to give them a demo number
+                  // For example: onCollectNumber('adventureland', '3');
+                  closeQRModal();
+                }}
+                style={{ background: 'linear-gradient(45deg, #28a745, #20c997)' }}
+              >
+                Complete Adventureland →
+              </QRCloseButton>
+            </div>
+          </QRModalCard>
+        </QRModalOverlay>
+      )}
 
       {/* Celebration Pop-up - Debug version */}
       {showCelebration ? (
