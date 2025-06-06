@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import './App.css';
 import MainPage from './components/MainPage';
+import InstructionPage from './components/InstructionPage'; 
 import GameIntro from './components/GameIntro';
 import LogoFinder from './components/toontown/LogoFinder';
 import ShootingGame from './components/ShootingGame';
 import LandSelection from './components/LandSelection';
-import LockPage from './components/LockPage'; // ADDED: Import LockPage
+import LockPage from './components/LockPage';
 import NavButton from './components/NavButton';
 import styled, { ThemeProvider } from 'styled-components';
 import Fantasyland from './components/fantasyland/Fantasyland';
 
-// Pastel Disney theme
+// Light Pink/Beige Disney theme
 const theme = {
   colors: {
     primary: '#f8b195', // Soft coral
@@ -18,7 +19,7 @@ const theme = {
     accent: '#c06c84', // Muted purple
     light: '#6c5b7b', // Lavender
     dark: '#355c7d', // Blue
-    background: '#f9f7f7', // Off-white
+    background: '#fdf6f6', // Light pink/beige
     text: '#2e4057', // Dark blue-gray
     white: '#ffffff',
     black: '#333333'
@@ -156,12 +157,17 @@ function App() {
     <ThemeProvider theme={theme}>
       <AppContainer>
         {currentPage === 'main' && (
-          <MainPage onContinue={() => navigateTo('lands')} />
+          <MainPage onContinue={() => navigateTo('instructions')} />
+        )}
+        
+        {/* NEW: Add instruction page */}
+        {currentPage === 'instructions' && (
+          <InstructionPage onContinue={() => navigateTo('lands')} />
         )}
         
         {currentPage === 'lands' && (
           <LandSelection 
-            onBack={() => navigateTo('main')}
+            onBack={() => navigateTo('instructions')}
             onSelectLand={(land) => {
               if (land === 'toontown') {
                 navigateTo('intro');

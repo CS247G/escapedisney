@@ -8,18 +8,18 @@ const GAME_WIDTH = 800;
 const GAME_HEIGHT = 500;
 const TARGET_SIZE = 60;
 
-// UPDATED: Different target types for each level
+// UPDATED: Different target types for each level with Buzz Lightyear themed icons
 const LEVEL_CONFIGS = {
   1: {
     name: "Training Ground",
     goal: 500,
     timeLimit: 30,
     targets: {
-      MICKEY: { points: 50, color: '#FF6B6B', emoji: '🐭', speed: 4 },
-      MINNIE: { points: 40, color: '#FF69B4', emoji: '🐭', speed: 4.5 },
-      GOOFY: { points: 30, color: '#45B7D1', emoji: '🐕', speed: 4 },
-      PLUTO: { points: 20, color: '#FFD700', emoji: '🐕', speed: 4.5 },
-      VILLAIN: { points: -20, color: '#8E44AD', emoji: '🦹', speed: 3.5 },
+      MICKEY: { points: 50, color: '#FF6B6B', emoji: '🚀', speed: 4 },
+      MINNIE: { points: 40, color: '#FF69B4', emoji: '🛸', speed: 4.5 },
+      GOOFY: { points: 30, color: '#45B7D1', emoji: '👨‍🚀', speed: 4 },
+      PLUTO: { points: 20, color: '#FFD700', emoji: '🌟', speed: 4.5 },
+      VILLAIN: { points: -20, color: '#8E44AD', emoji: '👾', speed: 3.5 },
     },
     villainChance: 0.1,
     spawnRate: 0.03
@@ -29,11 +29,11 @@ const LEVEL_CONFIGS = {
     goal: 800,
     timeLimit: 35,
     targets: {
-      BUZZ: { points: 60, color: '#00FF7F', emoji: '🚀', speed: 5.5 },
-      ALIEN: { points: 45, color: '#32CD32', emoji: '👽', speed: 6 },
-      ROBOT: { points: 35, color: '#4169E1', emoji: '🤖', speed: 5 },
-      STAR: { points: 80, color: '#FFD700', emoji: '⭐', speed: 4 },
-      METEOR: { points: -40, color: '#8B0000', emoji: '☄️', speed: 7 },
+      BUZZ: { points: 60, color: '#00FF7F', emoji: '🔫', speed: 5.5 },
+      ALIEN: { points: 45, color: '#32CD32', emoji: '👾', speed: 6 },
+      ROBOT: { points: 35, color: '#4169E1', emoji: '🛰️', speed: 5 },
+      STAR: { points: 80, color: '#FFD700', emoji: '🌟', speed: 4 },
+      METEOR: { points: -40, color: '#8B0000', emoji: '👾', speed: 7 },
     },
     villainChance: 0.15,
     spawnRate: 0.035
@@ -43,14 +43,29 @@ const LEVEL_CONFIGS = {
     goal: 1500,
     timeLimit: 40,
     targets: {
-      DONALD: { points: 50, color: '#4ECDC4', emoji: '🦆', speed: 6.5 },
-      MICKEY: { points: 70, color: '#FF6B6B', emoji: '🐭', speed: 6 },
-      VILLAIN: { points: -50, color: '#8E44AD', emoji: '🦹', speed: 5.5 },
+      DONALD: { points: 50, color: '#4ECDC4', emoji: '🛰️', speed: 6.5 },
+      MICKEY: { points: 70, color: '#FF6B6B', emoji: '🚀', speed: 6 },
+      VILLAIN: { points: -50, color: '#8E44AD', emoji: '👾', speed: 5.5 },
       BULLSEYE: { points: 200, color: '#E74C3C', emoji: '🎯', speed: 3 },
-      BONUS: { points: 100, color: '#9400D3', emoji: '💎', speed: 7 },
+      BONUS: { points: 100, color: '#9400D3', emoji: '⚡', speed: 7 },
     },
     villainChance: 0.2,
     spawnRate: 0.04
+  },
+  4: {
+    name: "Ultimate Space Commander",
+    goal: 2500,
+    timeLimit: 45,
+    targets: {
+      BUZZ_ELITE: { points: 100, color: '#00FF7F', emoji: '🚀', speed: 8 },
+      SPACE_RANGER: { points: 80, color: '#4169E1', emoji: '👨‍🚀', speed: 8.5 },
+      LASER_CRYSTAL: { points: 150, color: '#FF1493', emoji: '⚡', speed: 7.5 },
+      VILLAIN_BOSS: { points: -100, color: '#8B0000', emoji: '👾', speed: 6 },
+      BULLSEYE: { points: 200, color: '#E74C3C', emoji: '🎯', speed: 2.5 },
+      ENERGY_CORE: { points: 250, color: '#FFD700', emoji: '⚡', speed: 9 },
+    },
+    villainChance: 0.25,
+    spawnRate: 0.05
   }
 };
 
@@ -339,7 +354,7 @@ const ShootingGame = ({ onBack, onComplete }) => {
       ...targetData,
       direction: startSide === 'left' ? 1 : -1
     };
-  }, [currentLevel]);
+  }, [currentLevel, getCurrentConfig]);
 
   const updateTargets = useCallback(() => {
     setTargets(prev => 
@@ -355,7 +370,7 @@ const ShootingGame = ({ onBack, onComplete }) => {
   const checkLevelComplete = useCallback((currentScore) => {
     const config = getCurrentConfig();
     if (currentScore >= config.goal) {
-      if (currentLevel < 3) {
+      if (currentLevel < 4) {
         // Level completed, move to next level
         setShowLevelComplete(true);
         setTimeout(() => {
@@ -371,22 +386,22 @@ const ShootingGame = ({ onBack, onComplete }) => {
         setTimeout(() => {
           let number = 2; // Winning number for completing all levels
           let success = true;
-          setFinalNumber({ value: number, success, finalScore: currentScore, level: 3 });
+          setFinalNumber({ value: number, success, finalScore: currentScore, level: 4 });
           setGameState('complete');
         }, 500);
       }
     }
-  }, [currentLevel]);
+  }, [currentLevel, getCurrentConfig]);
 
   const endGame = useCallback(() => {
     // This function is only called when time runs out (failure)
     // Success is handled in checkLevelComplete
     
-    if (currentLevel < 3) {
-      // Failed before reaching level 3 - no number given
+    if (currentLevel < 4) {
+      // Failed before reaching level 4 - no number given
       setFinalNumber({ value: null, success: false, finalScore: score, level: currentLevel });
     } else {
-      // Failed at level 3 - give random number (not 2)
+      // Failed at level 4 - give random number (not 2)
       const randomNumbers = [1, 3, 4, 5, 6, 7, 8, 9];
       const number = randomNumbers[Math.floor(Math.random() * randomNumbers.length)];
       setFinalNumber({ value: number, success: false, finalScore: score, level: currentLevel });
@@ -395,9 +410,9 @@ const ShootingGame = ({ onBack, onComplete }) => {
     setGameState('complete');
   }, [score, currentLevel]);
 
-  // Spawn special targets (bullseye in level 3)
+  // Spawn special targets (bullseye in level 3 and 4)
   useEffect(() => {
-    if (gameState === 'playing' && currentLevel === 3 && timeLeft === 10 && !bullseyeSpawned) {
+    if (gameState === 'playing' && (currentLevel === 3 || currentLevel === 4) && timeLeft === 10 && !bullseyeSpawned) {
       setShowBullseyeWarning(true);
       setTimeout(() => {
         setShowBullseyeWarning(false);
@@ -405,7 +420,7 @@ const ShootingGame = ({ onBack, onComplete }) => {
         setBullseyeSpawned(true);
       }, 1500);
     }
-  }, [timeLeft, gameState, currentLevel, bullseyeSpawned, createTarget]);
+  }, [timeLeft, gameState, currentLevel, bullseyeSpawned, createTarget, getCurrentConfig]);
 
   useEffect(() => {
     if (gameState === 'playing') {
@@ -558,17 +573,18 @@ const ShootingGame = ({ onBack, onComplete }) => {
         
         <StartScreen>
           <Title>🚀 TOMORROWLAND SHOOTING GALLERY</Title>
-          <LevelTitle>Multi-Level Challenge!</LevelTitle>
+          <LevelTitle>Ultimate Space Ranger Challenge!</LevelTitle>
           <div style={{ fontSize: '1.1rem', marginBottom: '2rem', color: '#CCCCCC', maxWidth: '600px' }}>
             <p><strong>🎯 LEVEL 1: Training Ground</strong> - Score 500+ points (30s)</p>
             <p><strong>🚀 LEVEL 2: Space Patrol</strong> - Score 800+ points (35s)</p>
             <p><strong>⭐ LEVEL 3: Final Challenge</strong> - Score 1500+ points (40s)</p>
+            <p><strong>⚡ LEVEL 4: Ultimate Space Commander</strong> - Score 2500+ points (45s)</p>
             <br />
-            <p><strong>Complete all 3 levels to earn your number!</strong></p>
+            <p><strong>Complete all 4 levels to earn your number!</strong></p>
             <p>Each level has different targets and challenges!</p>
           </div>
           <StartButton onClick={startGame}>
-            START MULTI-LEVEL CHALLENGE!
+            START ULTIMATE CHALLENGE!
           </StartButton>
         </StartScreen>
       </Container>
@@ -576,7 +592,6 @@ const ShootingGame = ({ onBack, onComplete }) => {
   }
 
   if (gameState === 'complete') {
-    const config = getCurrentConfig();
     return (
       <Container>
         <BackButtonContainer>
@@ -590,8 +605,8 @@ const ShootingGame = ({ onBack, onComplete }) => {
         <StartScreen>
           <Title>
             {finalNumber.success ? '🎉 ALL LEVELS COMPLETED!' : 
-             finalNumber.level < 3 ? `💥 FAILED AT LEVEL ${finalNumber.level}` : 
-             `💥 FAILED LEVEL 3`}
+             finalNumber.level < 4 ? `💥 FAILED AT LEVEL ${finalNumber.level}` : 
+             `💥 FAILED LEVEL 4`}
           </Title>
           <div style={{ 
             background: finalNumber.success 
@@ -607,14 +622,14 @@ const ShootingGame = ({ onBack, onComplete }) => {
             {finalNumber.success ? (
               <>
                 <h3 style={{ margin: '0 0 1rem 0', color: '#d4edda' }}>
-                  🎯 MASTER SHOOTER! You conquered all 3 levels!
+                  🎯 ULTIMATE SPACE COMMANDER! You conquered all 4 levels!
                 </h3>
                 <h1 style={{ margin: '0', fontSize: '3rem' }}>Your Number: {finalNumber.value}</h1>
               </>
             ) : finalNumber.value ? (
               <>
                 <h3 style={{ margin: '0 0 1rem 0', color: '#f8d7da' }}>
-                  You reached Level 3 but didn't complete it!
+                  You reached Level 4 but didn't complete it!
                 </h3>
                 <h1 style={{ margin: '0', fontSize: '3rem' }}>Your Number: {finalNumber.value}</h1>
                 <p style={{ margin: '1rem 0 0 0', fontSize: '1rem' }}>
@@ -624,10 +639,10 @@ const ShootingGame = ({ onBack, onComplete }) => {
             ) : (
               <>
                 <h3 style={{ margin: '0 0 1rem 0', color: '#f8d7da' }}>
-                  Complete all 3 levels to earn your number!
+                  Complete all 4 levels to earn your number!
                 </h3>
                 <p style={{ margin: '1rem 0 0 0', fontSize: '1rem' }}>
-                  Try again to reach Level 3!
+                  Try again to reach Level 4!
                 </p>
               </>
             )}
@@ -669,7 +684,7 @@ const ShootingGame = ({ onBack, onComplete }) => {
           <span style={{ color: '#FFD700' }}>LEVEL {currentLevel}: {config.name}</span>
           <br />
           Score: {score}/{config.goal} | Time: {timeLeft}s
-          {currentLevel === 3 && timeLeft <= 15 && !bullseyeSpawned && (
+          {(currentLevel === 3 || currentLevel === 4) && timeLeft <= 15 && !bullseyeSpawned && (
             <span style={{ color: '#E74C3C', marginLeft: '20px' }}>
               🎯 BULLSEYE INCOMING!
             </span>
@@ -709,7 +724,7 @@ const ShootingGame = ({ onBack, onComplete }) => {
               top: target.y,
               backgroundColor: target.color,
               boxShadow: target.type === 'BULLSEYE' ? '0 0 20px #E74C3C' : 
-                         target.type === 'BONUS' ? '0 0 20px #9400D3' :
+                         target.type === 'BONUS' || target.type === 'ENERGY_CORE' ? '0 0 20px #9400D3' :
                          '0 0 10px rgba(255, 255, 255, 0.3)'
             }}
           >

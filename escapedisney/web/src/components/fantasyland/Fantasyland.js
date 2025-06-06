@@ -124,7 +124,7 @@ const NumberReveal = ({ onContinue }) => (
       <Card>
         <Title>Puzzle Complete!</Title>
         <Description>
-          ✅ You entered the correct blue word: <strong>smile</strong><br />
+          ✅ You entered the correct word: <strong>smile</strong><br />
           Your Fantasyland escape number is: <strong>9</strong>
         </Description>
         <ButtonContainer>
@@ -186,13 +186,16 @@ const Fantasyland = ({ onBack, onComplete }) => {
   const handleSubmit = () => {
     if (answer.trim().toLowerCase() === 'smile') {
       setCompleted(true);
-      onComplete(9); // Final number
     } else {
       alert('❌ Try again. The word must be exactly as shown on the crossword.');
     }
   };
 
-  if (completed) return <NumberReveal onContinue={onBack} />;
+  const handleContinue = () => {
+    onComplete(9); // Pass the number 9 when continuing
+  };
+
+  if (completed) return <NumberReveal onContinue={handleContinue} />;
 
   return (
     <PageContainer>
@@ -204,7 +207,7 @@ const Fantasyland = ({ onBack, onComplete }) => {
             <EmojiTitle>🔮 YOUR MISSION:</EmojiTitle>
             <Description>
               Listen to the enchanted riddle. It contains clues to help you solve a <Highlight>physical crossword</Highlight>!
-              After 5 minutes, you’ll receive a <Highlight color="#fbc531">magical hint</Highlight>.
+              After 5 minutes, you'll receive a <Highlight color="#fbc531">magical hint</Highlight>.
             </Description>
           </MissionBox>
 
