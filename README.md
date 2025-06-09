@@ -105,23 +105,11 @@ Problem-solving across different challenge types
 Immersion in Disney's magical world
 Independent gameplay without constant moderation
 
-🚀 Deployment
-The game is designed to be deployed as a static web application. Compatible with:
 
-Netlify (recommended)
-Vercel
-GitHub Pages
-Surge.sh
-
-Quick Deploy to Netlify
-
-Connect your GitHub repository to Netlify
-Set build command: npm run build
-Set publish directory: build
-Deploy!
 
 🎪 Team & Credits
 Created as part of a game design course focusing on interactive experiences and player engagement.
+
 Technologies Used
 
 React.js
