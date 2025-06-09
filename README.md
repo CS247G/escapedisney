@@ -155,10 +155,8 @@ To be played in-person!
 
 ### Features
 - Responsive design for different screen sizes
-- Cross-device compatibility
-- Local progress tracking
-- Interactive feedback system
-- Accessibility features with keyboard navigation
+- Local progress tracking across different lands
+
 
 ---
 
