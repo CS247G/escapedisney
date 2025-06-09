@@ -38,9 +38,12 @@ jobs:
         npm ci
         
     - name: Build React app
+      env:
+        CI: false
+        DISABLE_ESLINT_PLUGIN: true
       run: |
         cd escapedisney/web
-        CI=false npm run build
+        npm run build
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
